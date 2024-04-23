@@ -14,6 +14,10 @@ namespace App.Service
         {
             _clientRepository = clientRepository;
         }
+        public virtual bool CreateAccountWrapper(string email, string username, string password, string confirmPassword, string artistName)
+        {
+            return CreateAccount(email, username, password, confirmPassword, artistName);
+        }
 
         public bool IsValidCreateAcc(string email, string username, string password, string confirmPassword)
         {
