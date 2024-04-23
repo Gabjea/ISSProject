@@ -31,9 +31,10 @@ namespace App.Repository
 
         public override bool Add(Playlist playlist)
         {
-            var query = "INSERT INTO Playlists (name) VALUES (@name)";
+            var query = "INSERT INTO Playlists (id, name) VALUES (@id, @name)";
             var parameters = new SqlParameter[]
             {
+                new SqlParameter("@id", playlist.id),
                 new SqlParameter("@name", playlist.name),
             };
 
@@ -75,21 +76,21 @@ namespace App.Repository
             {
                 connection.Open();
 
-                string query = "SELECT PlaylistSong.songId" +
-                "FROM  Playlist " +
-                "INNER JOIN PlaylistSong on Playlist.id = PlaylistSong.PlaylistId" +
-                "WHERE Playlist.id = @plalistId";
+                string query = "SELECT PlaylistMusic.musicId " +
+                "FROM  Playlists " +
+                "INNER JOIN PlaylistMusic on Playlists.id = PlaylistMusic.playlistId " +
+                "WHERE Playlists.id = @playlistId";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@PlaylistId", playlistId);
+                    command.Parameters.AddWithValue("@playlistId", playlistId);
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         List<Song> songs = new List<Song>();
                         while (reader.Read())
                         {
-                            int songId = (int)reader["songId"];
+                            int songId = (int)reader["musicId"];
                             Song song = new SongRepository(_connectionString).getById(songId);
                             songs.Add(song);
                         }
@@ -97,7 +98,6 @@ namespace App.Repository
                         playlist = getById(playlistId);
                         playlist.songs = songs;
 
-                        
                     }
                 }
 
@@ -108,7 +108,7 @@ namespace App.Repository
 
         public bool AddSongToPlaylist(int playlistId, int songId)
         {
-            var query = "INSERT INTO PlaylistSong (playlistId, songId) VALUES (@playlistId, @songId)";
+            var query = "INSERT INTO PlaylistMusic (playlistId, musicId) VALUES (@playlistId, @songId)";
             var parameters = new SqlParameter[]
             {
                 new SqlParameter("@playlistId", playlistId),
@@ -120,7 +120,7 @@ namespace App.Repository
 
         public bool removeSongFromPlaylist(int playlistId, int songId)
         {
-            var query = "DELETE FROM PlaylistSong WHERE playlistId = @playlistId AND songId = @songId";
+            var query = "DELETE FROM PlaylistMusic WHERE playlistId = @playlistId AND musicId = @songId";
             var parameters = new SqlParameter[]
             {
                 new SqlParameter("@playlistId", playlistId),
@@ -130,7 +130,7 @@ namespace App.Repository
             return ExecuteNonQuery(query, parameters);
         }
 
-        public List<Playlist> GetPlaylistsByUser(int userId)
+        /*public List<Playlist> GetPlaylistsByUser(int userId)
         {
             List<Playlist> playlists = new List<Playlist>();
 
@@ -138,8 +138,8 @@ namespace App.Repository
             {
                 connection.Open();
 
-                string query = "SELECT Playlist.id, Playlist.name" +
-                "FROM  Playlist " +
+                string query = "SELECT Playlists.id, Playlists.name" +
+                "FROM  Playlists " +
                 "INNER JOIN UserPlaylist on Playlist.id = UserPlaylist.PlaylistId" +
                 "WHERE UserPlaylist.UserId = @userId";
 
@@ -161,6 +161,6 @@ namespace App.Repository
             }
 
             return playlists;
-        }
+        }*/
     }
 }
