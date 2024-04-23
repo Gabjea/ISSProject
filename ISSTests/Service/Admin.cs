@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.Service
 {
-    internal class Admin
+    public class Admin
     {
     }
 }

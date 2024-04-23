@@ -15,18 +15,19 @@ namespace App.Service
 		{
 			_songRepository = songRepository;
 		}
-        public ObservableCollection<string> getSongs() { 
-			List<Song> songs = _songRepository.getAll();
-			Console.WriteLine("Is good");
-			ObservableCollection<string> songNames = new ObservableCollection<string>();
-			foreach (Song song in songs)
-			{
-				string songString = song.title + " - " + song.artist;
-				   songNames.Add(songString);
-			}
-			return songNames;
-			
+        public virtual ObservableCollection<string> getSongs()
+        {
+            List<Song> songs = _songRepository.getAll();
+            Console.WriteLine("Is good");
+            ObservableCollection<string> songNames = new ObservableCollection<string>();
+            foreach (Song song in songs)
+            {
+                string songString = song.title + " - " + song.artist;
+                songNames.Add(songString);
+            }
+            return songNames;
         }
+
 
 
 

@@ -13,28 +13,29 @@ namespace App.Service
     public class Service
     {
         private static string connectionString = "Server=172.30.242.1;Database=Music;User Id=SA;Password=Password123;TrustServerCertificate=true";
-        private SongRepository songRepo;
-        private ClientRepository clientRepo;
-        private UserRepository userRepo;
-
+        private readonly SongRepository _songRepo;
+        private readonly ClientRepository _clientRepo;
+        private readonly UserRepository _userRepo;
         private readonly SongService _songService;
-        private readonly ClientService _clientService;
         private readonly Admin _admin;
         private readonly UserService _userService;
 
         private Account activeUser;
 
-        public Service()
-        {
-            songRepo = new SongRepository(connectionString);
-            clientRepo = new ClientRepository(connectionString);
-            userRepo = new UserRepository(connectionString);
-            _songService = new SongService(songRepo);
-            _clientService = new ClientService(clientRepo);
-            _admin = new Admin();
-            _userService = new UserService(userRepo);
+        private readonly ClientService _clientService;
 
+        public Service(SongRepository songRepo, ClientRepository clientRepo, UserRepository userRepo, SongService songService, ClientService clientService, Admin admin, UserService userService)
+        {
+            _songRepo = songRepo;
+            _clientRepo = clientRepo;
+            _userRepo = userRepo;
+            _songService = songService;
+            _clientService = clientService;
+            _admin = admin;
+            _userService = userService;
+            _clientService = clientService;
         }
+
         public void CreateAccount(string email, string username, string password, string confirmPassword, bool isClient)
         {
             if (isClient)
@@ -49,8 +50,8 @@ namespace App.Service
 
         public bool Login(string username, string password)
         {
-            var user = userRepo.getByUsername(username);
-            var client = clientRepo.getByUsername(username);
+            var user = _userRepo.getByUsername(username);
+            var client = _clientRepo.getByUsername(username);
 
             if (user == null && client == null)
             {
@@ -86,19 +87,17 @@ namespace App.Service
         {
             if (isClient)
             {
-
-                _clientService.CreateAccount(email, username, password, confirmPassword, artistName);
-                return true;
-
+                // Call the CreateAccount method of ClientService
+                return _clientService.CreateAccount(email, username, password, confirmPassword, artistName);
             }
             else
             {
+                // Call the CreateAccount method of UserService
                 _userService.CreateAccount(email, username, password, confirmPassword, location, age);
                 return true;
-
             }
-            return false;
         }
+
         public ObservableCollection<string> GetSongs()
         {
             return _songService.getSongs();
