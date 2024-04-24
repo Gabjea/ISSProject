@@ -16,14 +16,19 @@ namespace TestProject
         string mockedConnectionString;
         public UnitTestSongRepository()
         {
-            mockedConnectionString = "";
+            mockedConnectionString = "data source=FlorinPC\\SQLEXPRESS;initial catalog=ISS;trusted_connection=true;Integrated Security=true;TrustServerCertificate=true;";
             songRepository = new SongRepository(mockedConnectionString);
         }
         public void Dispose() { }
 
         public Song createMockSong()
         {
-            return new Song(1, "mockTitle", "mockArtist", "mockAlbum", new List<String>(), 0, 0, 0, 0, 0);
+            return new Song(10, "mockTitle", "mockArtist", "mockAlbum", new List<String>(), 0, 0, 0, 0, 0);
+        }
+
+        public Song createMockSongNonExistingId()
+        {
+            return new Song(232452, "mockTitle", "mockArtist", "mockAlbum", new List<String>(), 0, 0, 0, 0, 0);
         }
 
         [Fact]
@@ -31,25 +36,26 @@ namespace TestProject
         {
             try
             {
-                songRepository.getById(1);
+                Song returnedSong = songRepository.getById(1);
+                Assert.Equal(1, returnedSong.id);
             }
             catch (Exception ex) {
-                return;
+                Assert.True(false);
             }
-
-            Assert.True(false);
         }
 
         [Fact]
-        public void TestSongRepositoryGetAllMethod()
+        public void TestSongRepositoryGetByIdMethodFails()
         {
             try
             {
-               List<Song> returnedListOfSongs =  songRepository.getAll();
+                Song returnedSong = songRepository.getById(992);
+                Assert.True(false);
             }
-            catch(Exception ex) { return; }
-
-            Assert.True(false);
+            catch (Exception ex)
+            {
+                Assert.True(true);
+            }
         }
 
         [Fact]
@@ -58,10 +64,27 @@ namespace TestProject
             try
             {
                 songRepository.Add(createMockSong());
+                Assert.True(true);
             }
-            catch(Exception) { return; }
+            catch (Exception ex)
+            {
+                Assert.True(false);
+                Console.WriteLine(ex.Message);
+            }
+        }
 
-            Assert.True(false);
+        [Fact]
+        public void TestSongRepositoryFailsAddMethod()
+        {
+            try
+            {
+                songRepository.Add(createMockSong());
+                Assert.True(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.True(true);
+            }
         }
 
         [Fact]
@@ -70,11 +93,23 @@ namespace TestProject
             try
             {
                 songRepository.Update(createMockSong());
+                Assert.True(true);
             }
-            catch (Exception) { return; }
-
-            Assert.True(false);
+            catch (Exception) { Assert.True(false); }
         }
+
+        [Fact]
+        public void TestSongRepositoryFailsUpdateMethod()
+        {
+            try
+            {
+                songRepository.Update(createMockSongNonExistingId());
+                Assert.True(false);
+            }
+            catch (Exception) { Assert.True(true); }
+        }
+
+
 
         [Fact]
         public void TestSongRepositoryDeleteMethod()
@@ -82,10 +117,32 @@ namespace TestProject
             try
             {
                 songRepository.Delete(createMockSong());
+                Assert.True(true);
             }
-            catch (Exception) { return; }
+            catch (Exception) { Assert.True(false); }
+        }
 
-            Assert.True(false);
+        [Fact]
+        public void TestSongRepositoryFailsDeleteMethod()
+        {
+            try
+            {
+                songRepository.Delete(createMockSongNonExistingId());
+                Assert.True(false);
+            }
+            catch (Exception) { Assert.True(true); }
+        }
+
+        [Fact]
+        public void TestSongRepositoryGetAllMethod()
+        {
+            try
+            {
+               List<Song> returnedListOfSongs =  songRepository.getAll();
+               Assert.Equal(5, returnedListOfSongs.Count());
+            }
+            catch(Exception) { Assert.True(false); }
+
         }
 
 
