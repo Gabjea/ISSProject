@@ -18,12 +18,12 @@ namespace App.Repository
 
         public override User getById(int id)
         {
-            var query = "SELECT * FROM Users WHERE Id = @Id";
+            var query = "SELECT * FROM Users WHERE id = @Id";
             var parameters = new SqlParameter[] { new SqlParameter("@Id", id) };
             return ExecuteQuery(query, UserMapper, parameters).FirstOrDefault();
         }
 
-        public User getByUsername(string username)
+        public virtual User getByUsername(string username)
         {
             var query = "SELECT * FROM Users WHERE username = @username";
             var parameters = new SqlParameter[] { new SqlParameter("@username", username) };
@@ -38,10 +38,10 @@ namespace App.Repository
 
         public override bool Add(User user)
         {
-            var query = "INSERT INTO Users (username, password, email, salt, location, age, subscriptionTier, isAdimn) VALUES (@username, @password, @email, @phone, @salt, @location, @age, @subscriptionTier, @isAdmin)";
+            var query = "INSERT INTO Users (id, username, password, email, salt, location, age, subscriptionTier, isAdmin) VALUES (@id, @username, @password, @email, @salt, @location, @age, @subscriptionTier, @isAdmin)";
             var parameters = new SqlParameter[]
             {
-                //new SqlParameter("@id", user.id),
+                new SqlParameter("@id", user.id),
                 new SqlParameter("@username", user.username),
                 new SqlParameter("@password", user.passwordHash),
                 new SqlParameter("@email", user.email),
