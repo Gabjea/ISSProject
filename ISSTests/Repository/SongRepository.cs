@@ -30,10 +30,10 @@ namespace App.Repository
 
         public override bool Add(Song song)
         {
-            var query = "INSERT INTO Songs (title, artist, album,likes,shares,saves,restrictions) VALUES ( @title, @artist, @album, @likes, @shares, @saves, @restrictions)";
+            var query = "INSERT INTO Songs (id, title, artist, album,likes,shares,saves,restrictions) VALUES (@id, @title, @artist, @album, @likes, @shares, @saves, @restrictions)";
             var parameters = new SqlParameter[]
             {
-                //new SqlParameter("@id", song.id),
+                new SqlParameter("@id", song.id),
                 new SqlParameter("@title", song.title),
                 new SqlParameter("@artist", song.artist),
                 new SqlParameter("@album", song.album),
