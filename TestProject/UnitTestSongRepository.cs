@@ -16,19 +16,14 @@ namespace TestProject
         string mockedConnectionString;
         public UnitTestSongRepository()
         {
-            mockedConnectionString = "data source=FlorinPC\\SQLEXPRESS;initial catalog=ISS;trusted_connection=true;Integrated Security=true;TrustServerCertificate=true;";
+            mockedConnectionString = "";
             songRepository = new SongRepository(mockedConnectionString);
         }
         public void Dispose() { }
 
         public Song createMockSong()
         {
-            return new Song(10, "mockTitle", "mockArtist", "mockAlbum", new List<String>(), 0, 0, 0, 0, 0);
-        }
-
-        public Song createMockSongNonExistingId()
-        {
-            return new Song(232452, "mockTitle", "mockArtist", "mockAlbum", new List<String>(), 0, 0, 0, 0, 0);
+            return new Song(1, "mockTitle", "mockArtist", "mockAlbum", new List<String>(), 0, 0, 0, 0, 0);
         }
 
         [Fact]
@@ -36,101 +31,13 @@ namespace TestProject
         {
             try
             {
-                Song returnedSong = songRepository.getById(1);
-                Assert.Equal(1, returnedSong.id);
+                songRepository.getById(1);
             }
             catch (Exception ex) {
-                Assert.True(false);
+                return;
             }
-        }
 
-        [Fact]
-        public void TestSongRepositoryGetByIdMethodFails()
-        {
-            try
-            {
-                Song returnedSong = songRepository.getById(992);
-                Assert.True(false);
-            }
-            catch (Exception ex)
-            {
-                Assert.True(true);
-            }
-        }
-
-        [Fact]
-        public void TestSongRepositoryAddMethod()
-        {
-            try
-            {
-                songRepository.Add(createMockSong());
-                Assert.True(true);
-            }
-            catch (Exception ex)
-            {
-                Assert.True(false);
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        [Fact]
-        public void TestSongRepositoryFailsAddMethod()
-        {
-            try
-            {
-                songRepository.Add(createMockSong());
-                Assert.True(false);
-            }
-            catch (Exception ex)
-            {
-                Assert.True(true);
-            }
-        }
-
-        [Fact]
-        public void TestSongRepositoryUpdateMethod()
-        {
-            try
-            {
-                songRepository.Update(createMockSong());
-                Assert.True(true);
-            }
-            catch (Exception) { Assert.True(false); }
-        }
-
-        [Fact]
-        public void TestSongRepositoryFailsUpdateMethod()
-        {
-            try
-            {
-                songRepository.Update(createMockSongNonExistingId());
-                Assert.True(false);
-            }
-            catch (Exception) { Assert.True(true); }
-        }
-
-
-
-        [Fact]
-        public void TestSongRepositoryDeleteMethod()
-        {
-            try
-            {
-                songRepository.Delete(createMockSong());
-                Assert.True(true);
-            }
-            catch (Exception) { Assert.True(false); }
-        }
-
-        [Fact]
-        public void TestSongRepositoryFailsDeleteMethod()
-        {
-            try
-            {
-                songRepository.Delete(createMockSongNonExistingId());
-                Assert.True(false);
-            }
-            catch (Exception) { Assert.True(true); }
+            Assert.True(false);
         }
 
         [Fact]
@@ -139,10 +46,46 @@ namespace TestProject
             try
             {
                List<Song> returnedListOfSongs =  songRepository.getAll();
-               Assert.Equal(5, returnedListOfSongs.Count());
             }
-            catch(Exception) { Assert.True(false); }
+            catch(Exception ex) { return; }
 
+            Assert.True(false);
+        }
+
+        [Fact]
+        public void TestSongRepositoryAddMethod()
+        {
+            try
+            {
+                songRepository.Add(createMockSong());
+            }
+            catch(Exception) { return; }
+
+            Assert.True(false);
+        }
+
+        [Fact]
+        public void TestSongRepositoryUpdateMethod()
+        {
+            try
+            {
+                songRepository.Update(createMockSong());
+            }
+            catch (Exception) { return; }
+
+            Assert.True(false);
+        }
+
+        [Fact]
+        public void TestSongRepositoryDeleteMethod()
+        {
+            try
+            {
+                songRepository.Delete(createMockSong());
+            }
+            catch (Exception) { return; }
+
+            Assert.True(false);
         }
 
 

@@ -30,10 +30,10 @@ namespace App.Repository
 
         public override bool Add(Song song)
         {
-            var query = "INSERT INTO Songs (id, title, artist, album,likes,shares,saves,restrictions) VALUES (@id, @title, @artist, @album, @likes, @shares, @saves, @restrictions)";
+            var query = "INSERT INTO Songs (title, artist, album,likes,shares,saves,restrictions) VALUES ( @title, @artist, @album, @likes, @shares, @saves, @restrictions)";
             var parameters = new SqlParameter[]
             {
-                new SqlParameter("@id", song.id),
+                //new SqlParameter("@id", song.id),
                 new SqlParameter("@title", song.title),
                 new SqlParameter("@artist", song.artist),
                 new SqlParameter("@album", song.album),
@@ -50,10 +50,10 @@ namespace App.Repository
 
         public override bool Update(Song song)
         {
-            var query = "UPDATE Songs SET title = @title, artist = @artist, album = @album, restrictions = @restrictions, duration = @duration, timesPlayed = @timesPlayed, likes = @likes, shares = @shares, saves = @saves WHERE id = @id";
+            var query = "UPDATE Songs SET title = @title, artist = @artist, album = @album, restrictions = @restrictions, duration = @duration, timesPlayed = @timesPlayed, likes = @likes, shares = @shares, saves = @saves WHERE Id = @Id";
             var parameters = new SqlParameter[]
             {
-                new SqlParameter("@id", song.id),
+                new SqlParameter("@Id", song.id),
                 new SqlParameter("@title", song.title),
                 new SqlParameter("@artist", song.artist),
                 new SqlParameter("@album", song.album),
@@ -70,15 +70,15 @@ namespace App.Repository
 
         public override bool Delete(Song song)
         {
-            var query = "Delete from Songs where id = @id";
-            var parameters = new SqlParameter[] { new SqlParameter("@id", song.id) };
+            var query = "DELETE FROM Songs WHERE Id = @Id";
+            var parameters = new SqlParameter[] { new SqlParameter("@Id", song.id) };
             return ExecuteNonQuery(query, parameters);
         }
 
 
         public static Song SongMapper(IDataReader reader)
         {
-            var id = (int)reader["id"];
+            var id = (int)reader["Id"];
 
             int titleOrdinal = reader.GetOrdinal("title");
             var title = reader.IsDBNull(titleOrdinal) ? string.Empty : reader.GetString(titleOrdinal);
@@ -113,4 +113,6 @@ namespace App.Repository
         }
 
     }
+
+    
 }
