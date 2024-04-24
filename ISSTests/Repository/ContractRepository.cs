@@ -19,23 +19,24 @@ namespace App.Repository
 
         public override Contract getById(int id)
         {
-            var query = "SELECT * FROM Contracts WHERE id = @Id";
+            var query = "SELECT * FROM Contract WHERE id = @Id";
             var parameters = new SqlParameter[] { new SqlParameter("@Id", id) };
             return ExecuteQuery(query, ContractMapper, parameters).FirstOrDefault();
         }
 
         public override List<Contract> getAll()
         {
-            var query = "SELECT * FROM Contracts";
+            var query = "SELECT * FROM Contract";
             return ExecuteQuery(query, ContractMapper, null);
         }
 
         public override bool Add(Contract contract)
         {
-            var query = "INSERT INTO Contracts (clientId1,clientId2,musicId) VALUES (@clientId1,@clientId2,@musicId)";
+            var query = "INSERT INTO Contract (id,clientId1,clientId2,musicId) VALUES (@id,@clientId1,@clientId2,@musicId)";
             
             var parameters = new SqlParameter[]
             {
+                new SqlParameter("@id", contract.id),
                 new SqlParameter("@clientId1", contract.client1),
                 new SqlParameter("@clientId2", contract.client2),
                 new SqlParameter("@musicId", contract.song)
@@ -46,11 +47,9 @@ namespace App.Repository
 
         public override bool Update(Contract contract)
         {
-            var querry = "UPDATE Contracts SET clientId1 = @clientId1, clientId2 = @clientId2, musicId = @musicId WHERE id = @Id";
+            var querry = "UPDATE Contract SET musicId = @musicId WHERE id = @Id";
             var parameters = new SqlParameter[]
             {
-                new SqlParameter("@clientId1", contract.client1),
-                new SqlParameter("@clientId2", contract.client2),
                 new SqlParameter("@musicId", contract.song),
                 new SqlParameter("@Id", contract.id)
             };
@@ -59,7 +58,7 @@ namespace App.Repository
 
         public override bool Delete(Contract contract)
         {
-            var query = "DELETE FROM Contracts WHERE Id = @Id";
+            var query = "DELETE FROM Contract WHERE Id = @Id";
             var parameters = new SqlParameter[] { new SqlParameter("@Id", contract.id) };
             return ExecuteNonQuery(query, parameters);
         }
@@ -75,40 +74,5 @@ namespace App.Repository
         }
 
 
-        public bool AddClientToContract(int contractId, int clientId)
-        {
-            using (SqlConnection connection = new SqlConnection(this._connectionString))
-            {
-                connection.Open();
-
-                string query = @"INSERT INTO ContractUser (contractId, clientId) VALUES (@ContractId, @ClientId)";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ContractId", contractId);
-                    command.Parameters.AddWithValue("@ClientId", clientId);
-
-                    return command.ExecuteNonQuery() > 0;
-                }
-            }
-        }
-
-        public bool RemoveClientFromContract(int contractId, int clientId)
-        {
-            using (SqlConnection connection = new SqlConnection(this._connectionString))
-            {
-                connection.Open();
-
-                string query = @"DELETE FROM ContractUser WHERE contractId = @ContractId AND clientId = @ClientId";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ContractId", contractId);
-                    command.Parameters.AddWithValue("@ClientId", clientId);
-
-                    return command.ExecuteNonQuery() > 0;
-                }
-            }
-        }
     }
 }
