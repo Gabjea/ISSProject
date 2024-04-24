@@ -12,7 +12,7 @@ namespace TestProject
 
         public UnitTestPlaylistRepository()
         {
-            connectionString = "data source=DESKTOP-Q2V2E5Q;initial catalog=ISS;trusted_connection=true;Integrated Security=true;TrustServerCertificate=True;";
+            connectionString = "data source=DESKTOP-MS42PFQ;initial catalog=ISS;trusted_connection=true;Integrated Security=true;TrustServerCertificate=True;";
             _playlistRepository = new PlaylistRepository(connectionString);
             ClearTestData();
         }
